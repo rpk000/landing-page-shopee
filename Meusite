@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Oferta Especial Shopee</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      padding: 1rem;
+    }
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 1rem;
+    }
+    p {
+      color: #555;
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+    }
+    button {
+      background-color: #ff5722;
+      color: white;
+      border: none;
+      padding: 0.8rem 1.5rem;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #e64a19;
+    }
+    #msg {
+      margin-top: 1rem;
+      font-weight: bold;
+      color: green;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Oferta Imperdível na Shopee!</h1>
+    <p>Não perca essa oportunidade exclusiva. Clique abaixo e aproveite descontos incríveis!</p>
+    <button id="btnAfiliado">Aproveitar Oferta</button>
+    <div id="msg">Obrigado por clicar! Você será redirecionado.</div>
+  </div>
+
+  <script>
+    const btn = document.getElementById('btnAfiliado');
+    const msg = document.getElementById('msg');
+    const linkAfiliado = "https://s.shopee.com.br/7ATG8zETTL";
+
+    btn.addEventListener('click', () => {
+      msg.style.display = 'block';
+      setTimeout(() => {
+        window.open(linkAfiliado, '_blank');
+      }, 1500);
+    });
+  </script>
+</body>
+</html>
