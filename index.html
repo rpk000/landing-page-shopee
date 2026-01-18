@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Lili - Assistente Inteligente</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #0f172a;
+  color: #fff;
+  padding: 20px;
+}
+button {
+  padding: 12px 18px;
+  font-size: 16px;
+  background: #22c55e;
+  border: none;
+  border-radius: 8px;
+}
+#log {
+  margin-top: 15px;
+  background: #020617;
+  padding: 10px;
+  border-radius: 6px;
+}
+</style>
+</head>
+
+<body>
+<h2>🤖 Olá, eu sou a Lili</h2>
+<p>Clique no botão e fale comigo</p>
+
+<button onclick="start()">🎤 Falar com a Lili</button>
+
+<div id="log"></div>
+
+<script>
+const log = msg => {
+  document.getElementById("log").innerHTML += `<p>${msg}</p>`;
+};
+
+const speak = text => {
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = "pt-BR";
+  u.rate = 1;
+  u.pitch = 1.2;
+  speechSynthesis.speak(u);
+};
+
+function start() {
+  if (!('webkitSpeechRecognition' in window)) {
+    log("❌ Seu navegador não suporta reconhecimento de voz");
+    return;
+  }
+
+  const rec = new webkitSpeechRecognition();
+  rec.lang = "pt-BR";
+  rec.onstart = () => log("🎧 Lili está ouvindo...");
+  rec.onresult = e => {
+    const texto = e.results[0][0].transcript;
+    log("Você: " + texto);
+    responder(texto);
+  };
+  rec.onerror = e => log("Erro: " + e.error);
+  rec.start();
+}
+
+function responder(texto) {
+  let resposta = "Ainda estou aprendendo";
+
+  if (texto.includes("olá")) resposta = "Olá, estou aqui";
+  if (texto.includes("seu nome")) resposta = "Meu nome é Lili";
+  if (texto.includes("bitcoin")) resposta = "Posso analisar o mercado de criptomoedas para você";
+
+  log("Lili: " + resposta);
+  speak(resposta);
+}
+</script>
+</body>
+</html>
