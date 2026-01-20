@@ -1,147 +1,75 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<title>Lili - Assistente Inteligente</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <title>Controle de Gastos Mensal</title>
 
-<style>
-body {
-  font-family: Arial, sans-serif;
-  background: #0f172a;
-  color: #fff;
-  padding: 20px;
-}
-h2 {
-  margin-top: 0;
-}
-button {
-  padding: 14px 20px;
-  font-size: 16px;
-  background: #22c55e;
-  color: #000;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-}
-#log {
-  margin-top: 20px;
-  background: #020617;
-  padding: 15px;
-  border-radius: 8px;
-  min-height: 120px;
-}
-p {
-  margin: 6px 0;
-}
-</style>
+  <!-- PWA / APK -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#00c853">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<h2>🤖 Olá, eu sou a Lili</h2>
-<p>Toque no botão e fale comigo</p>
+<h1>💰 Controle de Gastos Mensal</h1>
 
-<button onclick="start()">🎤 Falar com a Lili</button>
+<div class="card">
+  <h2>Salário: R$ <span id="salario">3500.00</span></h2>
+</div>
 
-<div id="log"></div>
+<div class="card lista">
+  <div class="linha">
+    <span>Compra do mês</span>
+    <input id="compra" type="number" placeholder="R$">
+    <button onclick="confirmar('Compra do mês')">Confirmar</button>
+  </div>
 
-<script>
-// =====================
-// FUNÇÕES BÁSICAS
-// =====================
-const log = msg => {
-  document.getElementById("log").innerHTML += `<p>${msg}</p>`;
-};
+  <div class="linha">
+    <span>Lazer</span>
+    <input id="lazer" type="number" placeholder="R$">
+    <button onclick="confirmar('Lazer')">Confirmar</button>
+  </div>
 
-const speak = text => {
-  const u = new SpeechSynthesisUtterance(text);
-  u.lang = "pt-BR";
-  u.rate = 1;
-  u.pitch = 1.2;
-  speechSynthesis.speak(u);
-};
+  <div class="linha">
+    <span>Investimentos</span>
+    <input id="investimentos" type="number" placeholder="R$">
+    <button onclick="confirmar('Investimentos')">Confirmar</button>
+  </div>
 
-// =====================
-// MEMÓRIA DA LILI
-// =====================
-let memoria = JSON.parse(localStorage.getItem("lili_memoria")) || {};
+  <div class="linha">
+    <span>Conta de luz</span>
+    <input id="luz" type="number" placeholder="R$">
+    <button onclick="confirmar('Conta de luz')">Confirmar</button>
+  </div>
 
-// =====================
-// RECONHECIMENTO DE VOZ
-// =====================
-function start() {
-  if (!("webkitSpeechRecognition" in window)) {
-    log("❌ Seu navegador não suporta reconhecimento de voz");
-    speak("Seu navegador não suporta reconhecimento de voz");
-    return;
-  }
+  <div class="linha">
+    <span>Conta de água</span>
+    <input id="agua" type="number" placeholder="R$">
+    <button onclick="confirmar('Conta de água')">Confirmar</button>
+  </div>
 
-  const rec = new webkitSpeechRecognition();
-  rec.lang = "pt-BR";
+  <div class="linha">
+    <span>Outros gastos</span>
+    <input id="outros" type="number" placeholder="R$">
+    <button onclick="confirmar('Outros gastos')">Confirmar</button>
+  </div>
 
-  rec.onstart = () => {
-    log("🎧 Lili está ouvindo...");
-  };
+  <div class="linha">
+    <span>Reserva de emergência</span>
+    <input id="reserva" type="number" placeholder="R$">
+    <button onclick="confirmar('Reserva de emergência')">Confirmar</button>
+  </div>
+</div>
 
-  rec.onresult = e => {
-    const texto = e.results[0][0].transcript.toLowerCase();
-    log("Você: " + texto);
-    responder(texto);
-  };
+<div class="card">
+  <p>Total gasto até agora: R$ <span id="total">0.00</span></p>
+  <h2>Saldo restante: R$ <span id="saldo">3500.00</span></h2>
+</div>
 
-  rec.onerror = e => {
-    log("Erro: " + e.error);
-  };
+<button class="voz" onclick="explicarSaldo()">🎤 Lili explicar saldo</button>
 
-  rec.start();
-}
-
-// =====================
-// INTELIGÊNCIA DA LILI
-// =====================
-function responder(texto) {
-  let resposta = "";
-
-  // comandos fixos
-  if (texto.includes("seu nome")) {
-    resposta = "Meu nome é Lili";
-  }
-
-  else if (texto.includes("o que você aprendeu")) {
-    const itens = Object.keys(memoria);
-    resposta = itens.length
-      ? "Eu aprendi: " + itens.join(", ")
-      : "Ainda não aprendi nada novo";
-  }
-
-  // ensinar algo novo
-  else if (texto.includes("aprenda")) {
-    // exemplo: "aprenda que bitcoin é volátil"
-    const aprender = texto.split("aprenda")[1];
-    if (aprender) {
-      memoria[aprender.trim()] = true;
-      localStorage.setItem("lili_memoria", JSON.stringify(memoria));
-      resposta = "Aprendi mais uma coisa com você";
-    } else {
-      resposta = "O que você quer que eu aprenda?";
-    }
-  }
-
-  // lembrar algo aprendido
-  else {
-    const lembrado = Object.keys(memoria).find(p => texto.includes(p));
-    if (lembrado) {
-      resposta = "Eu lembro que você me ensinou que " + lembrado;
-    } else {
-      resposta = "Ainda estou aprendendo. Você pode me ensinar algo dizendo, aprenda que...";
-    }
-  }
-
-  log("Lili: " + resposta);
-  speak(resposta);
-}
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
